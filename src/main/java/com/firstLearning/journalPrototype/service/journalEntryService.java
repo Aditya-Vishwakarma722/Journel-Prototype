@@ -1,5 +1,6 @@
 package com.firstLearning.journalPrototype.service;
 
+import com.firstLearning.journalPrototype.entity.User;
 import com.firstLearning.journalPrototype.repository.journalEntryRepository;
 import com.firstLearning.journalPrototype.entity.JournalEntry;
 import org.bson.types.ObjectId;
@@ -15,8 +16,14 @@ public class journalEntryService {
     @Autowired
     private journalEntryRepository journalEntryRepository;
 
-    public void saveEntry(JournalEntry journalEntry){
-        journalEntryRepository.save(journalEntry);
+    @Autowired
+    private UserService userService;
+
+    public void saveEntry(JournalEntry journalEntry, String userName){
+        User user = userService.findByUserName(userName);
+        JournalEntry saved = journalEntryRepository.save(journalEntry);
+        user.getJournalEntries().add(saved);
+        userService.saveEntry(user);
     }
 
     public List<JournalEntry> getAll(){

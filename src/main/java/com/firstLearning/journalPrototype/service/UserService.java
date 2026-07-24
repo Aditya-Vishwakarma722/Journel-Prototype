@@ -32,4 +32,8 @@ public class UserService {
         return "ID Deleted Successfully!";
     }
 
+    public User findByUserName(String UserName){
+        return userRepository.findByUserName(UserName);
+    }
+
 }
