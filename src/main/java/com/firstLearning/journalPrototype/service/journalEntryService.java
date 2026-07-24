@@ -26,6 +26,10 @@ public class journalEntryService {
         userService.saveEntry(user);
     }
 
+    public void saveEntry(JournalEntry journalEntry){
+        journalEntryRepository.save(journalEntry);
+    }
+
     public List<JournalEntry> getAll(){
         return journalEntryRepository.findAll();
     }
@@ -34,7 +38,15 @@ public class journalEntryService {
         return journalEntryRepository.findById(id);
     }
 
-    public String deleteById(ObjectId myId){
+    public String deleteById(ObjectId myId, String userName){
+        User user = userService.findByUserName(userName);
+        user.getJournalEntries().removeIf(x -> x.getId().equals(myId));
+        userService.saveEntry(user);
+        journalEntryRepository.deleteById(myId);
+        return "Journal Deleted Successfully!";
+    }
+
+    public String deleteSimple(ObjectId myId){
         journalEntryRepository.deleteById(myId);
         return "ID Deleted Successfully!";
     }
